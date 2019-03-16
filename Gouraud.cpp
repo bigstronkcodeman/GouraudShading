@@ -95,8 +95,8 @@ void calcVertexColors()
 			double lightAmt = dotProduct(betweenVec, mesh.getNormal(i, j)) * (1.0 / (0 + 0 * betweenMag + 0.25 * (betweenMag * betweenMag)));
 			lightAmt *= 50;
 			vertsRGB[i][j][0] = vertsRGB[i][j][0] + lightAmt * light2.rgb[0];
-			vertsRGB[i][j][1] = vertsRGB[i][j][0] + lightAmt * light2.rgb[1];
-			vertsRGB[i][j][2] = vertsRGB[i][j][0] + lightAmt * light2.rgb[2];
+			vertsRGB[i][j][1] = vertsRGB[i][j][1] + lightAmt * light2.rgb[1];
+			vertsRGB[i][j][2] = vertsRGB[i][j][2] + lightAmt * light2.rgb[2];
 		}
 	}
 }
