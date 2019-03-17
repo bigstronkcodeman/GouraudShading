@@ -12,35 +12,30 @@
 
 using namespace std;
 
-//simple struct to represent a 3d vertex
 struct Vertex3D
 {
 	double x;
 	double y;
 	double z;
 
-	//default ctor, initialize point to origin
 	Vertex3D() {
 		x = 0;
 		y = 0;
 		z = 0;
 	}
 
-	//3 int ctor, initialize point to specified location
 	Vertex3D(double inX, double inY, double inZ) {
 		x = inX;
 		y = inY;
 		z = inZ;
 	}
 
-	//copy ctor
 	Vertex3D(const Vertex3D& copyMe) {
 		x = copyMe.x;
 		y = copyMe.y;
 		z = copyMe.z;
 	}
 
-	//assignment operator redefinition
 	void operator=(const Vertex3D& other)
 	{
 		x = other.x;
@@ -68,7 +63,6 @@ struct Vertex3D
 		return x != other.x || y != other.y || z != other.z;
 	}
 
-	//scale point by any real number
 	void scale(double scalar)
 	{
 		x *= scalar;
@@ -76,7 +70,6 @@ struct Vertex3D
 		z *= scalar;
 	}
 
-	//set point to any x, y, z position
 	void translate(double xm, double ym, double zm)
 	{
 		x += xm;
