@@ -13,7 +13,7 @@
 #include <iostream>
 #include <random>
 #include "RectangleMesh.h"
-#define SIZE 100
+#define SIZE 75
 
 using namespace std;
 
@@ -50,15 +50,17 @@ RectangleMesh mesh(SIZE, SIZE, 1000, 1000);
 double vertsRGB[SIZE][SIZE][3];
 
 Light light1(Vertex3D(0, 500, 0), 1, 0, 1);
-Light light2(Vertex3D(500, 500, 0), 0, 1, 1);
+Light light2(Vertex3D(500, 500, 0), 0.35, 0.6, 1);
 
 bool displayNormals = false;
+bool displayTriangleMesh = false;
 int controlFocus = 0;
 MODE mode = ROTATE;
+int userSize = SIZE;
 
-double Mr = 1.0;
-double Mg = 1.0;
-double Mb = 1.0;
+double Mr = 1;
+double Mg = 1;
+double Mb = 1;
 
 double dotProduct(Vertex3D v1, Vertex3D v2)
 {
@@ -82,7 +84,6 @@ void calcVertexColors()
 			vertsRGB[i][j][2] = lightAmt * Mb * light1.rgb[2];
 		}
 	}
-
 
 	for (int i = 0; i < mesh.getRowCount(); i++)
 	{
@@ -158,6 +159,26 @@ void display()
 			glColor3f(vertsRGB[i + 1][j + 1][0], vertsRGB[i + 1][j + 1][1], vertsRGB[i + 1][j + 1][2]);
 			glVertex3f(v3.x, v3.y, v3.z);
 			glEnd();
+
+			if (displayTriangleMesh)
+			{
+				v1.translate(1, 1, 1);
+				v2.translate(1, 1, 1);
+				v3.translate(1, 1, 1);
+				v4.translate(1, 1, 1);
+				glColor3f(1, 0, 0);
+				glBegin(GL_LINE_LOOP);
+				glVertex3f(v1.x, v1.y, v1.z);
+				glVertex3f(v2.x, v2.y, v2.z);
+				glVertex3f(v3.x, v3.y, v3.z);
+				glEnd();
+				glColor3f(0, 1, 0);
+				glBegin(GL_LINE_LOOP);
+				glVertex3f(v1.x, v1.y, v1.z);
+				glVertex3f(v4.x, v4.y, v4.z);
+				glVertex3f(v3.x, v3.y, v3.z);
+				glEnd();
+			}
 		}
 	}
 
@@ -423,6 +444,37 @@ void keyboard(unsigned char key, int x, int y)
 	case 'U':
 		mode = ROTATE;
 		break;
+	case 'v':
+		displayTriangleMesh = !displayTriangleMesh;
+		break;
+	case '+':
+	{
+		if (userSize < SIZE)
+		{
+			userSize++;
+			RectangleMesh newMesh = RectangleMesh(userSize, userSize, 1000, 1000);
+			mesh = newMesh;
+			mesh.noisify();
+			Vertex3D translateBy = mesh.getVertex(mesh.getRowCount() / 2, mesh.getColCount() / 2);
+			mesh.translate(-translateBy.x, -translateBy.y, -translateBy.z);
+			mesh.initNormals();
+		}
+		break;
+	}
+	case '-':
+	{
+		if (userSize > 2)
+		{
+			userSize--;
+			RectangleMesh newMesh = RectangleMesh(userSize, userSize, 1000, 1000);
+			mesh = newMesh;
+			mesh.noisify();
+			Vertex3D translateBy = mesh.getVertex(mesh.getRowCount() / 2, mesh.getColCount() / 2);
+			mesh.translate(-translateBy.x, -translateBy.y, -translateBy.z);
+			mesh.initNormals();
+		}
+		break;
+	}
 	}
 	calcVertexColors();
 	glutPostRedisplay();
@@ -446,6 +498,7 @@ void init()
 		<< "1 => give light 1 the focus\n"
 		<< "2 => give light 2 the focus\n"
 		<< "p => display mesh vertex normals\n"
+		<< "v => display triangle mesh faces\n"
 		<< "x, y, z => translate or rotate in negative direction\n"
 		<< "X, Y, Z => translate or rotate in positive direction\n"
 		<< "r, g, b => decrease r, g, or b of focused light respectively\n"

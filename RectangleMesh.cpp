@@ -105,7 +105,7 @@ void RectangleMesh::noisify()
 	{
 		for (int j = 0; j < colCount; j++)
 		{
-			verts[i][j].translate(0, rand() % 55, 0);
+			verts[i][j].translate(0, rand() % 100 * ((double)rand() / RAND_MAX), 0);
 		}
 	}
 
